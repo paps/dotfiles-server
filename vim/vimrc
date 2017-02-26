@@ -1,0 +1,241 @@
+﻿source ~/.paps/vim/bundles.vim
+
+scriptencoding utf-8 " this is a utf-8 script with BOM
+
+set nocompatible " don't care about Vi
+
+" show tabs and trailing spaces
+set list
+set listchars=tab:¦\ ,trail:·
+
+" default indentation
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
+set noexpandtab
+set preserveindent
+set copyindent
+set autoindent
+set smartindent
+
+" disable all bells
+set vb t_vb=
+set noeb
+
+" search
+set hlsearch " always highlight search results
+set ignorecase
+set smartcase " ignore case when searching only in lowercase
+set incsearch " show search results while typing
+
+" other stuff
+set nowrap " do not wrap long lines
+set ruler
+set showcmd " show command composition in command line
+if has("persistent_undo")
+    set undofile
+    set undodir=~/.vim/undodir
+endif
+"if exists("+colorcolumn")
+"    set colorcolumn=80
+"endif
+if has("mouse_sgr")
+    set ttym=sgr
+endif
+set scrolloff=3 " offset of 3 lines around the cursor
+set modelines=0
+set cursorline
+set cursorcolumn
+set noek " don't care about escape commands
+set noequalalways
+set lazyredraw " do not redraw too much when executing macros
+set wildmenu " enhanced command line completion
+set ttyfast " don't care about ancient slow terminals
+set timeout timeoutlen=3000 ttimeoutlen=0 " compose real commands for 3 seconds, don't compose insert mode commands (escape, etc)
+"set foldmethod=syntax
+set shm+=I " don't care about intro text
+syntax on
+filetype plugin indent on
+nnoremap <Space> <NOP>
+let mapleader="\<Space>"
+
+" reload files that changed
+set autoread
+"autocmd CursorHold * checktime
+
+" man pages
+let $PAGER=''
+"runtime ftplugin/man.vim
+nmap K :Man <C-R>=expand("<cword>")<CR><CR>
+
+" indicate insert mode with underscore cursor
+" 1 or 0 -> blinking block
+" 3 -> blinking underscore
+" Recent versions of xterm (282 or above) also support
+" 5 -> blinking vertical bar
+" 6 -> solid vertical bar
+if &term =~ '^xterm'
+    " solid underscore
+    let &t_SI = "\<Esc>[\x35 q"
+    " solid block
+    let &t_EI = "\<Esc>[2 q"
+elseif &term =~ "^screen" " xterm in tmux really => forwarding of escape codes
+    " solid underscore
+    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>[\x35 q\<Esc>\\"
+    " solid block
+    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>[2 q\<Esc>\\"
+endif
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+
+" gui
+" remove almost everything
+set guioptions-=m
+set guioptions-=T
+set guioptions-=e
+set guioptions-=L
+set guioptions-=r
+set guioptions-=b
+set mouse=nicr " mouse enabled, but no text selection
+
+" disable arrow keys
+inoremap  <Up>     <NOP>
+inoremap  <Down>   <NOP>
+inoremap  <Left>   <NOP>
+inoremap  <Right>  <NOP>
+noremap   <Up>     <NOP>
+noremap   <Down>   <NOP>
+noremap   <Left>   <NOP>
+noremap   <Right>  <NOP>
+
+" fast cursor movement instead of confusing scrolling
+map <C-U> 5k
+map <C-D> 5j
+
+" disable ex mode
+map Q <NOP>
+
+set laststatus=2 " always show status line
+
+" colorscheme
+let g:solarized_visibility = "low"
+if has("gui_running")
+    set background=light
+    colorscheme solarized
+    set guifont=Ttyp0\ 10
+else
+    "set t_Co=256 " 256 colors terminal
+    set background=light " parameter for solarized theme
+    let g:solarized_termtrans=1 " optional: enables transparency (tmux pane background selection becomes visible)
+    colorscheme solarized
+endif
+highlight SpecialKey term=NONE cterm=NONE gui=NONE
+
+" make :W work like :w, same for :Q, etc (shitty typing skills!)
+cnoreabbrev W w
+cnoreabbrev Q q
+cnoreabbrev E e
+cnoreabbrev Qa qa
+cnoreabbrev QA qa
+cnoreabbrev Wqa wqa
+cnoreabbrev WQa wqa
+cnoreabbrev WQA wqa
+cnoreabbrev q1 q!
+cnoreabbrev qa1 qa!
+cnoreabbrev Qa1 qa!
+cnoreabbrev QA1 qa!
+cnoreabbrev w1 w!
+cnoreabbrev W1 w!
+cnoreabbrev wq1 wq!
+cnoreabbrev Wq1 wq!
+cnoreabbrev WQ1 wq!
+cnoreabbrev wqa1 wqa!
+cnoreabbrev Wqa1 wqa!
+cnoreabbrev WQa1 wqa!
+cnoreabbrev WQA1 wqa!
+
+" tab navigation
+"" ctrl-k for next tab, ctrl-j for previous tab
+nmap <C-j> :tabprevious<CR>
+nmap <C-k> :tabnext<CR>
+map <C-j> :tabprevious<CR>
+map <C-k> :tabnext<CR>
+"" ctrl-t for new tab
+nmap <C-t> :tabnew<CR>
+
+" some useful <Leader>shortcuts
+map <Leader>m :make<CR>
+map <Leader>n :NERDTree<CR>
+map <Leader>j :nohlsearch<CR>
+map <Leader>p :set paste!<CR>
+map <Leader>w :set wrap!<CR>
+map <Leader>e :Errors<CR>
+
+" nerdtree configuration
+let g:NERDTreeIgnore = ['\.o$', '\~$', '\.pyc$', '\.swp$']
+let g:NERDTreeDirArrows = 1
+let g:NERDTreeShowHidden = 1
+let g:NERDTreeMinimalUI = 1
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "*",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "-",
+    \ "Renamed"   : ">",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ "Unknown"   : "?"
+    \ }
+autocmd FileType nerdtree setlocal nocursorcolumn
+
+" BufferGator
+let buffergator_viewport_split_policy = 'R' " show buffergator on the right side
+let buffergator_split_size = 35
+let buffergator_sort_regime = 'mru' " most recently used buffer sorting
+
+" Syntastic
+let g:syntastic_always_populate_loc_list = 0
+let g:syntastic_auto_loc_list = 0
+let g:syntastic_check_on_open = 0
+let g:syntastic_check_on_wq = 0
+let g:syntastic_error_symbol = "✗"
+let g:syntastic_warning_symbol = "⚠"
+let g:syntastic_style_error_symbol = "✗"
+let g:syntastic_style_warning_symbol = "⚠"
+let g:tsuquyomi_disable_quickfix = 1
+let g:syntastic_typescript_checkers = ['tsuquyomi']
+
+" airline
+let g:airline_powerline_fonts = 1
+let g:airline_theme = 'solarized'
+let g:airline_solarized_normal_green = 0
+let g:airline_solarized_bg = 'light'
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+endif
+let g:airline_symbols.linenr = '' " do not show ⭡ everywhere
+let g:airline_symbols.maxlinenr = '' " same
+let g:airline_symbols.spell = '⚠'
+let g:airline_symbols.notexists = '⚠'
+let g:airline#extensions#whitespace#mixed_indent_algo = 2 " allow tabs then spaces
+let g:airline#extensions#whitespace#symbol = '⚠'
+set noshowmode " do not show --INSERT-- and the like in the command line
+
+" deoplete
+if has("nvim")
+    let g:deoplete#enable_at_startup = 1
+endif
+
+" allow project specific settings
+set secure
+set exrc
+
+" copy/paste to * register (to stop yanking when deleting)
+"noremap  y "*y
+"noremap  Y "*Y
+"noremap  p "*p
+"noremap  P "*P
+"vnoremap y "*y
+"vnoremap Y "*Y
+"vnoremap p "*p
+"vnoremap P "*P

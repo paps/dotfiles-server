@@ -1,0 +1,22 @@
+[color]
+    diff = auto
+    status = auto
+    branch = auto
+[user]
+    name = Martin Tapia
+    email = contact@martintapia.com
+[alias]
+    ci = commit
+    co = checkout
+    st = status
+    br = branch
+[branch "master"]
+    remote = origin
+    merge = refs/heads/master
+[push]
+    default = matching
+[core]
+    symlinks = true
+
+[tig]
+    mouse = true

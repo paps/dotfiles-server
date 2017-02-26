@@ -1,0 +1,1 @@
+/home/paps/.paps/vim/vimrc

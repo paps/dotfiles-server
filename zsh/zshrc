@@ -1,0 +1,132 @@
+# aliases
+# -------
+alias ls='ls --color=auto -F'
+alias l='ls'
+alias ll='ls -lh'
+alias lll='ll'
+alias llll='ll'
+alias la='ls -lha'
+alias sl='ls'
+alias grep='grep --color=auto'
+alias rm="echo 'choose between del (trash-put) and \\\rm' ; false"
+alias du='du -sh'
+alias df='df -h'
+alias del='trash-put'
+
+# colors
+# ------
+eval `dircolors ~/.paps/zsh/dircolors.ansi-light`
+. $HOME/.paps/zsh/spectrum.zsh # provides FG[] & BG[] for easier color formatting
+
+# VCS info
+# --------
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:*' actionformats "%{$FG[004]%}⮂%{$BG[004]%}%{$FG[015]%} %a %{$FG[014]%}⮂%{$BG[014]%}%{$FG[015]%} %b%c %{$FX[reset]%}%{$FG[014]%}%u⮀%{$FX[reset]%}"
+zstyle ':vcs_info:*' formats "%{$FG[014]%}⮂%{$BG[014]%}%{$FG[015]%} %b%c %{$FX[reset]%}%{$FG[014]%}%u⮀%{$FX[reset]%}"
+zstyle ':vcs_info:*' stagedstr " %{$FX[bold]%}%{$FG[009]%}✓"
+zstyle ':vcs_info:*' unstagedstr "%{$FG[014]%}%{$BG[004]%}⮀%{$FG[015]%} %{$FX[bold]%}* %{$FX[reset]%}%{$FG[004]%}"
+zstyle ':vcs_info:*' enable git
+# right side prompt vcs
+function __vcs_info_prompt() {
+	vcs_info
+	if [ -n "$vcs_info_msg_0_" ]; then
+		echo -n " ${vcs_info_msg_0_}"
+	fi
+}
+
+# command line vim mode
+# ---------------------
+# regenerate prompt every time
+setopt prompt_subst
+# prompt init
+autoload -Uz promptinit
+promptinit
+# distant and local prompts
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] ; then
+	PS1="%{$BG[002]%}%{$FG[015]%} %{$FX[bold]%}%M %{$FX[reset]%}%{$BG[014]%}%{$FG[002]%}⮀%{$FG[015]%} %~ %{$FX[reset]%}%{$FG[014]%}⮀%{$FX[reset]%} "
+else
+	PS1="%{$BG[014]%}%{$FG[015]%} %~ %{$FX[reset]%}%{$FG[014]%}⮀%{$FX[reset]%} "
+fi
+# right side prompt vi mode
+function __vi_mode_prompt() {
+	local normal_mode="%{$FG[011]%}⮂%{$BG[011]%}%{$FG[015]%}%{$FX[bold]%} NORMAL %{$FX[reset]%}%{$FG[011]%}⮀%{$FX[reset]%}"
+	echo -n "${${KEYMAP/vicmd/$normal_mode}/(main|viins)/}"
+}
+RPS1='$(__vi_mode_prompt)$(__vcs_info_prompt)%(?.. %{$FG[001]%}⮂%{$BG[001]%}%{$FG[015]%}↪%?%{$FX[reset]%}%{$FG[001]%}⮀)%{$FX[reset]%}' # single quotes for delayed evaluation
+# reset prompt on some events
+function zle-keymap-select zle-line-init zle-line-finish {
+	zle reset-prompt
+	zle -R
+}
+bindkey -v # vi mode
+# load some editing widgets for vi mode prompt
+zle -N zle-line-init
+zle -N zle-line-finish
+zle -N zle-keymap-select
+zle -N edit-command-line
+KEYTIMEOUT=1 # almost no delay when escape is pressed
+# visual mode goes to real vim
+autoload -Uz edit-command-line
+bindkey -M vicmd 'v' edit-command-line
+
+# completions
+# -----------
+autoload -Uz compinit
+compinit
+unsetopt correct_all
+setopt correct # only correct commands, not arguments
+zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*:*:*:*:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+function expand-or-complete-with-dots() {
+	echo -n "\e[31m...\e[0m"
+	zle expand-or-complete
+	zle redisplay
+}
+zle -N expand-or-complete-with-dots
+bindkey "^I" expand-or-complete-with-dots
+bindkey '^[[Z' reverse-menu-complete
+
+# history
+# -------
+DIRSTACKSIZE=10
+setopt inc_append_history hist_ignore_dups hist_ignore_space hist_find_no_dups auto_pushd pushd_minus pushd_ignore_dups
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=30000
+SAVEHIST=30000
+bindkey "^R" history-incremental-pattern-search-backward
+bindkey "^S" history-incremental-pattern-search-forward
+bindkey -M vicmd '?' history-incremental-pattern-search-backward
+bindkey -M vicmd '/' history-incremental-pattern-search-forward
+
+# other stuff...
+# --------------
+setopt no_rm_star_silent
+stty -ixon # disable ctrl-s/ctrl-q xterm scroll lock
+
+# ssh-agent
+# ---------
+local ssh_agent_env="$HOME/.ssh/environment-$HOST"
+function start_ssh_agent() {
+	ssh-agent | sed 's/^echo/#echo/' > ${ssh_agent_env}
+	chmod 600 ${ssh_agent_env}
+	. ${ssh_agent_env} > /dev/null
+	ssh-add $HOME/.ssh/*_rsa
+}
+if [ -f "${ssh_agent_env}" ]; then
+	. ${ssh_agent_env} > /dev/null
+	ps x | grep ${SSH_AGENT_PID} | grep ssh-agent > /dev/null || {
+		start_ssh_agent;
+	}
+else
+	start_ssh_agent;
+fi
+unfunction start_ssh_agent
+unset ssh_agent_env
+
+# fixes for Del, Home and End keys
+# --------------------------------
+bindkey "^[[1~" beginning-of-line
+bindkey "^[[4~" end-of-line
+bindkey "^[[3~" delete-char

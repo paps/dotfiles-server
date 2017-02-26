@@ -1,0 +1,6 @@
+*.bak
+.*.swp
+
+vim/vim/.netrwhist
+vim/vim/bundle
+vim/vim/.init.vim-rplugin~
