@@ -12,7 +12,7 @@ My Debian Jessie dotfiles for servers. For a minimal desktop or laptop configura
 * Make sure Jessie backports are enabled in `/etc/apt/sources.list`. For example:
 	* `deb http://deb.debian.org/debian jessie-backports main`
 * Install `tmux` from the backports:
-	* `apt-get -t jessie-backports install tmux`
+	* `sudo apt-get -t jessie-backports install tmux`
 
 ### SSH
 
@@ -20,7 +20,7 @@ My Debian Jessie dotfiles for servers. For a minimal desktop or laptop configura
 
 ### Install the dotfiles
 
-* `git clone git@github.com:paps/dotfiles-server.git`
+* `git clone https://github.com/paps/dotfiles-server.git`
 * `cd dotfiles-server`
 * Create all the required links: `./setup.sh [absolute-path-to-dotfiles]`
 
@@ -28,6 +28,7 @@ My Debian Jessie dotfiles for servers. For a minimal desktop or laptop configura
 
 * `whereis zsh`
 * `chsh -s [absolute-path-to-shell]`
+* Or, in case we're non-root with a disabled password: `sudo chsh -s [absolute-path-to-shell] username`
 
 ### Local binaries
 
