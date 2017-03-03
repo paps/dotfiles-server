@@ -12,6 +12,7 @@ alias rm="echo 'choose between del (trash-put) and \\\rm' ; false"
 alias du='du -sh'
 alias df='df -h'
 alias del='trash-put'
+alias trash-restore='restore-trash'
 
 # colors
 # ------
