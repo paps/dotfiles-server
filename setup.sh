@@ -23,7 +23,7 @@ case $1 in
 esac
 
 rmflags="-ivr"
-if [ "$2" -e "--force"]
+if [ "$2" = "--force" ]
 then
     rmflags="-fvr"
 fi
