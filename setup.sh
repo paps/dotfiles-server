@@ -47,10 +47,6 @@ echo "Link: ~/.config/nvim -> ~/.paps/vim/vim"
 rm $rmflags ~/.config/nvim
 ln -sT ~/.paps/vim/vim ~/.config/nvim
 
-echo "Link: ~/.config/nvim/init.vim -> ~/.paps/vim/vimrc"
-rm $rmflags ~/.config/nvim/init.vim
-ln -sT ~/.paps/vim/vimrc ~/.config/nvim/init.vim
-
 # zsh
 echo "Link: ~/.zshrc -> ~/.paps/zsh/zshrc"
 rm $rmflags ~/.zshrc
