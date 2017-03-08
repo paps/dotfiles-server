@@ -1,6 +1,8 @@
 *.bak
 .*.swp
 
+zsh/do_not_start_ssh_agent
+
 vim/vim/.netrwhist
 vim/vim/bundle
 vim/vim/.init.vim-rplugin~

@@ -108,23 +108,25 @@ stty -ixon # disable ctrl-s/ctrl-q xterm scroll lock
 
 # ssh-agent
 # ---------
-local ssh_agent_env="$HOME/.ssh/environment-$HOST"
-function start_ssh_agent() {
-	ssh-agent | sed 's/^echo/#echo/' > ${ssh_agent_env}
-	chmod 600 ${ssh_agent_env}
-	. ${ssh_agent_env} > /dev/null
-	ssh-add $HOME/.ssh/*_rsa
-}
-if [ -f "${ssh_agent_env}" ]; then
-	. ${ssh_agent_env} > /dev/null
-	ps x | grep ${SSH_AGENT_PID} | grep ssh-agent > /dev/null || {
-		start_ssh_agent;
+if [ ! -f "$HOME/.paps/zsh/do_not_start_ssh_agent" ]; then
+	local ssh_agent_env="$HOME/.ssh/environment-$HOST"
+	function start_ssh_agent() {
+		ssh-agent | sed 's/^echo/#echo/' > ${ssh_agent_env}
+		chmod 600 ${ssh_agent_env}
+		. ${ssh_agent_env} > /dev/null
+		ssh-add $HOME/.ssh/*_rsa
 	}
-else
-	start_ssh_agent;
+	if [ -f "${ssh_agent_env}" ]; then
+		. ${ssh_agent_env} > /dev/null
+		ps x | grep ${SSH_AGENT_PID} | grep ssh-agent > /dev/null || {
+			start_ssh_agent;
+		}
+	else
+		start_ssh_agent;
+	fi
+	unfunction start_ssh_agent
+	unset ssh_agent_env
 fi
-unfunction start_ssh_agent
-unset ssh_agent_env
 
 # fixes for Del, Home and End keys
 # --------------------------------

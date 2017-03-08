@@ -41,3 +41,7 @@ Add local binaries in `~/.paps/bin` (it's in $PATH).
 * For updating installed plugins: `vim +PluginUpdate`
 * For installing a new plugin added in `bundles.vim`: `vim +PluginInstall`
 * For removing unused plugins: `vim +PluginClean`
+
+### Disable SSH agent
+
+Because you're on a server, you might want to disable the local SSH agent that is automatically started by zsh to let your agent forwarding take place. To do so, simply `touch ~/.paps/zsh/do_not_start_ssh_agent`.
