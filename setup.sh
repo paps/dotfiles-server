@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # arg number check
-if [ $# -ne 1 ]
+if [ $# -lt 1 ]
 then
-    echo "Usage: $0 /absolute/path/to/conf/git"
+    echo "Usage: $0 /absolute/path/to/conf/git [--force]"
     exit 1
 fi
 
@@ -22,48 +22,54 @@ case $1 in
         ;;
 esac
 
+rmflags="-ivr"
+if [ "$2" -e "--force"]
+then
+    rmflags="-fvr"
+fi
+
 # dir
 echo "Link: ~/.paps -> $1"
-rm -ivr ~/.paps
+rm $rmflags ~/.paps
 ln -sT "$1" ~/.paps
 
 # vim
 echo "Link: ~/.vimrc -> ~/.paps/vim/vimrc"
-rm -ivr ~/.vimrc
+rm $rmflags ~/.vimrc
 ln -sT ~/.paps/vim/vimrc ~/.vimrc
 
 echo "Link: ~/.vim -> ~/.paps/vim/vim"
-rm -ivr ~/.vim
+rm $rmflags ~/.vim
 ln -sT ~/.paps/vim/vim ~/.vim
 
 # nvim
 echo "Link: ~/.config/nvim -> ~/.paps/vim/vim"
-rm -ivr ~/.config/nvim
+rm $rmflags ~/.config/nvim
 ln -sT ~/.paps/vim/vim ~/.config/nvim
 
 echo "Link: ~/.config/nvim/init.vim -> ~/.paps/vim/vimrc"
-rm -ivr ~/.config/nvim/init.vim
+rm $rmflags ~/.config/nvim/init.vim
 ln -sT ~/.paps/vim/vimrc ~/.config/nvim/init.vim
 
 # zsh
 echo "Link: ~/.zshrc -> ~/.paps/zsh/zshrc"
-rm -ivr ~/.zshrc
+rm $rmflags ~/.zshrc
 ln -sT ~/.paps/zsh/zshrc ~/.zshrc
 
 echo "Link: ~/.zshenv -> ~/.paps/zsh/zshenv"
-rm -ivr ~/.zshenv
+rm $rmflags ~/.zshenv
 ln -sT ~/.paps/zsh/zshenv ~/.zshenv
 
 echo "Link: ~/.inputrc -> ~/.paps/zsh/inputrc"
-rm -ivr ~/.inputrc
+rm $rmflags ~/.inputrc
 ln -sT ~/.paps/zsh/inputrc ~/.inputrc
 
 # git
 echo "Link: ~/.gitconfig -> ~/.paps/git/gitconfig"
-rm -ivr ~/.gitconfig
+rm $rmflags ~/.gitconfig
 ln -sT ~/.paps/git/gitconfig ~/.gitconfig
 
 # tmux
 echo "Link: ~/.tmux.conf -> ~/.paps/tmux/tmux.conf"
-rm -ivr ~/.tmux.conf
+rm $rmflags ~/.tmux.conf
 ln -sT ~/.paps/tmux/tmux.conf ~/.tmux.conf
