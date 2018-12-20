@@ -12,7 +12,7 @@ alias rm="echo 'choose between del (trash-put) and \\\rm' ; false"
 alias du='du -sh'
 alias df='df -h'
 alias del='trash-put'
-alias trash-restore='restore-trash'
+#alias trash-restore='restore-trash'
 
 # colors
 # ------
@@ -23,16 +23,16 @@ eval `dircolors ~/.paps/zsh/dircolors.ansi-light`
 # --------
 autoload -Uz vcs_info
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' actionformats "%{$FG[004]%}⮂%{$BG[004]%}%{$FG[015]%} %a %{$FG[014]%}⮂%{$BG[014]%}%{$FG[015]%} %b%c %{$FX[reset]%}%{$FG[014]%}%u⮀%{$FX[reset]%}"
-zstyle ':vcs_info:*' formats "%{$FG[014]%}⮂%{$BG[014]%}%{$FG[015]%} %b%c %{$FX[reset]%}%{$FG[014]%}%u⮀%{$FX[reset]%}"
-zstyle ':vcs_info:*' stagedstr " %{$FX[bold]%}%{$FG[009]%}✓"
-zstyle ':vcs_info:*' unstagedstr "%{$FG[014]%}%{$BG[004]%}⮀%{$FG[015]%} %{$FX[bold]%}* %{$FX[reset]%}%{$FG[004]%}"
+zstyle ':vcs_info:*' actionformats "%{$FG[004]%}⮂%{$BG[004]%}%{$FG[015]%}%a%{$FG[014]%}⮂%{$BG[014]%}%{$FG[015]%}%b%c%{$FX[reset]%}%{$FG[014]%}%u⮀%{$FX[reset]%}"
+zstyle ':vcs_info:*' formats "%{$FG[014]%}⮂%{$BG[014]%}%{$FG[015]%}%b%c%{$FX[reset]%}%{$FG[014]%}%u⮀%{$FX[reset]%}"
+zstyle ':vcs_info:*' stagedstr "%{$FX[bold]%}%{$FG[009]%}✓"
+zstyle ':vcs_info:*' unstagedstr "%{$FG[014]%}%{$BG[004]%}⮀%{$FG[015]%}%{$FX[bold]%}*%{$FX[reset]%}%{$FG[004]%}"
 zstyle ':vcs_info:*' enable git
 # right side prompt vcs
 function __vcs_info_prompt() {
 	vcs_info
 	if [ -n "$vcs_info_msg_0_" ]; then
-		echo -n " ${vcs_info_msg_0_}"
+		echo -n "${vcs_info_msg_0_}"
 	fi
 }
 
@@ -43,18 +43,17 @@ setopt prompt_subst
 # prompt init
 autoload -Uz promptinit
 promptinit
-# distant and local prompts
-if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] ; then
-	PS1="%{$BG[002]%}%{$FG[015]%} %{$FX[bold]%}%M %{$FX[reset]%}%{$BG[014]%}%{$FG[002]%}⮀%{$FG[015]%} %~ %{$FX[reset]%}%{$FG[014]%}⮀%{$FX[reset]%} "
-else
-	PS1="%{$BG[014]%}%{$FG[015]%} %~ %{$FX[reset]%}%{$FG[014]%}⮀%{$FX[reset]%} "
-fi
-# right side prompt vi mode
+# left side prompt vi mode
 function __vi_mode_prompt() {
 	local normal_mode="%{$FG[011]%}⮂%{$BG[011]%}%{$FG[015]%}%{$FX[bold]%} NORMAL %{$FX[reset]%}%{$FG[011]%}⮀%{$FX[reset]%}"
 	echo -n "${${KEYMAP/vicmd/$normal_mode}/(main|viins)/}"
 }
-RPS1='$(__vi_mode_prompt)$(__vcs_info_prompt)%(?.. %{$FG[001]%}⮂%{$BG[001]%}%{$FG[015]%}↪%?%{$FX[reset]%}%{$FG[001]%}⮀)%{$FX[reset]%}' # single quotes for delayed evaluation
+# distant and local prompts
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] ; then
+	PS1='%{$FG[002]%}⮂%{$BG[002]%}%{$FG[015]%}%{$FX[bold]%}%M%{$FX[reset]%}%{$FG[002]%}⮀%(?..%{$FG[001]%}⮂%{$BG[001]%}%{$FG[015]%}↪%?%{$FX[reset]%}%{$FG[001]%}⮀)$(__vi_mode_prompt)$(__vcs_info_prompt)%{$FX[reset]%}%{$FG[014]%}⮂%{$BG[014]%}%{$FG[015]%}%~%{$FX[reset]%}%{$FG[014]%}⮀%{$FX[reset]%} '
+else
+	PS1='%(?..%{$FG[001]%}⮂%{$BG[001]%}%{$FG[015]%}↪%?%{$FX[reset]%}%{$FG[001]%}⮀)$(__vi_mode_prompt)$(__vcs_info_prompt)%{$FX[reset]%}%{$FG[014]%}⮂%{$BG[014]%}%{$FG[015]%}%~%{$FX[reset]%}%{$FG[014]%}⮀%{$FX[reset]%} '
+fi
 # reset prompt on some events
 function zle-keymap-select zle-line-init zle-line-finish {
 	zle reset-prompt

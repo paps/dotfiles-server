@@ -9,10 +9,10 @@ set list
 set listchars=tab:¦\ ,trail:·
 
 " default indentation
-set shiftwidth=4
-set tabstop=4
-set softtabstop=4
-set noexpandtab
+set tabstop=8 " number of columns a tab counts for (this is the only command affecting text display)
+set softtabstop=8 " number of columns inserted when hitting tab in insert mode (should be equal to tabstop)
+set shiftwidth=8 " number of columns removed or inserted when hitting << and >> (should be equal to tabstop)
+set noexpandtab " do not change tabs into spaces
 set preserveindent
 set copyindent
 set autoindent
@@ -164,13 +164,13 @@ nmap <C-t> :tabnew<CR>
 
 " some useful <Leader>shortcuts
 map <Leader>m :make<CR>
-map <Leader>n :NERDTree<CR>
 map <Leader>j :nohlsearch<CR>
 map <Leader>p :set paste!<CR>
 map <Leader>w :set wrap!<CR>
 map <Leader>e :Errors<CR>
 
 " nerdtree configuration
+map <Leader>n :NERDTree<CR>
 let g:NERDTreeIgnore = ['\.o$', '\~$', '\.pyc$', '\.swp$']
 let g:NERDTreeDirArrows = 1
 let g:NERDTreeShowHidden = 1
@@ -193,18 +193,6 @@ let buffergator_viewport_split_policy = 'R' " show buffergator on the right side
 let buffergator_split_size = 35
 let buffergator_sort_regime = 'mru' " most recently used buffer sorting
 
-" Syntastic
-let g:syntastic_always_populate_loc_list = 0
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_error_symbol = "✗"
-let g:syntastic_warning_symbol = "⚠"
-let g:syntastic_style_error_symbol = "✗"
-let g:syntastic_style_warning_symbol = "⚠"
-let g:tsuquyomi_disable_quickfix = 1
-let g:syntastic_typescript_checkers = ['tsuquyomi']
-
 " airline
 let g:airline_powerline_fonts = 1
 let g:airline_theme = 'solarized'
@@ -221,11 +209,6 @@ let g:airline#extensions#whitespace#mixed_indent_algo = 2 " allow tabs then spac
 let g:airline#extensions#whitespace#symbol = '⚠'
 set noshowmode " do not show --INSERT-- and the like in the command line
 
-" deoplete
-if has("nvim")
-    let g:deoplete#enable_at_startup = 1
-endif
-
 " allow project specific settings
 set secure
 set exrc
@@ -239,3 +222,14 @@ set exrc
 "vnoremap Y "*Y
 "vnoremap p "*p
 "vnoremap P "*P
+
+" Copy to clipboard
+vnoremap <leader>y "+y
+nnoremap <leader>Y "+yg_
+nnoremap <leader>y "+y
+
+" Paste from clipboard
+nnoremap <leader>p "+p
+nnoremap <leader>P "+P
+vnoremap <leader>p "+p
+vnoremap <leader>P "+P

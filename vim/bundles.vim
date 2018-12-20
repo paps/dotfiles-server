@@ -10,25 +10,40 @@ call vundle#rc()
 " To remove unused bundles, run:
 " vim +PluginClean
 
-" Comments after Bundle command are not allowed
+" NOTE: Comments after Bundle command are not allowed
 Plugin 'gmarik/vundle'
+
+" Generic useful plugins
+" ======================
+" Fix vim's repeat . command
 Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-unimpaired'
+" Useful :Git commands
 Plugin 'tpope/vim-fugitive'
-Plugin 'bronson/vim-trailing-whitespace'
-Plugin 'milkypostman/vim-togglelist'
-Plugin 'jeetsukumaran/vim-buffergator'
-Plugin 'scrooloose/nerdtree'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'wavded/vim-stylus'
-Plugin 'digitaltoad/vim-jade'
-Plugin 'digitaltoad/vim-pug'
+" Auto-detect indent from file/folder contents
 Plugin 'tpope/vim-sleuth'
+" Highlight trailing whitespace
+Plugin 'bronson/vim-trailing-whitespace'
+" leader-l, leader-q to toggle location list, quickfix list
+Plugin 'milkypostman/vim-togglelist'
+
+" Styling
+" =======
+" Support for 256 colors
+Plugin 'chriskempson/base16-vim'
+" Status line
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'chriskempson/base16-vim'
-Plugin 'chriskempson/base16-vim'
+
+" File management
+" ===============
+" Buffer quick-switch (leader-b)
+Plugin 'jeetsukumaran/vim-buffergator'
+" Left-side file browser (leader-n)
+Plugin 'scrooloose/nerdtree'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'airblade/vim-gitgutter'
+
+" Analytics
 Plugin 'wakatime/vim-wakatime'
 
 filetype plugin indent on " required!
