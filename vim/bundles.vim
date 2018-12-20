@@ -28,8 +28,6 @@ Plugin 'milkypostman/vim-togglelist'
 
 " Styling
 " =======
-" Support for 256 colors
-Plugin 'chriskempson/base16-vim'
 " Status line
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
