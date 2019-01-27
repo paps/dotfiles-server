@@ -23,10 +23,10 @@ eval `dircolors ~/.paps/zsh/dircolors.ansi-light`
 # --------
 autoload -Uz vcs_info
 zstyle ':vcs_info:*' check-for-changes true
-zstyle ':vcs_info:*' actionformats "%{$FG[004]%}⮂%{$BG[004]%}%{$FG[015]%}%a%{$FG[014]%}⮂%{$BG[014]%}%{$FG[015]%}%b%c%{$FX[reset]%}%{$FG[014]%}%u⮀%{$FX[reset]%}"
-zstyle ':vcs_info:*' formats "%{$FG[014]%}⮂%{$BG[014]%}%{$FG[015]%}%b%c%{$FX[reset]%}%{$FG[014]%}%u⮀%{$FX[reset]%}"
-zstyle ':vcs_info:*' stagedstr "%{$FX[bold]%}%{$FG[009]%}✓"
-zstyle ':vcs_info:*' unstagedstr "%{$FG[014]%}%{$BG[004]%}⮀%{$FG[015]%}%{$FX[bold]%}*%{$FX[reset]%}%{$FG[004]%}"
+zstyle ':vcs_info:*' actionformats "%{$BG[004]%}%{$FG[015]%}%a%{$BG[014]%}%{$FG[015]%}%b%c%{$FX[reset]%}%{$FG[014]%}%u%{$FX[reset]%} "
+zstyle ':vcs_info:*' formats "%{$BG[014]%}%{$FG[015]%}%b%c%{$FX[reset]%}%{$FG[014]%}%u%{$FX[reset]%} "
+zstyle ':vcs_info:*' stagedstr "%{$BG[006]%}%{$FG[015]%}%{$FX[bold]%}✓%{$FX[reset]%}"
+zstyle ':vcs_info:*' unstagedstr "%{$BG[004]%}%{$FG[015]%}%{$FX[bold]%}*%{$FX[reset]%}"
 zstyle ':vcs_info:*' enable git
 # right side prompt vcs
 function __vcs_info_prompt() {
@@ -43,16 +43,18 @@ setopt prompt_subst
 # prompt init
 autoload -Uz promptinit
 promptinit
-# left side prompt vi mode
+# vi mode background color change
 function __vi_mode_prompt() {
-	local normal_mode="%{$FG[011]%}⮂%{$BG[011]%}%{$FG[015]%}%{$FX[bold]%} NORMAL %{$FX[reset]%}%{$FG[011]%}⮀%{$FX[reset]%}"
+	local normal_mode="%{$BG[005]%}"
 	echo -n "${${KEYMAP/vicmd/$normal_mode}/(main|viins)/}"
 }
-# distant and local prompts
+# prompts
 if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] ; then
-	PS1='%{$FG[002]%}⮂%{$BG[002]%}%{$FG[015]%}%{$FX[bold]%}%M%{$FX[reset]%}%{$FG[002]%}⮀%(?..%{$FG[001]%}⮂%{$BG[001]%}%{$FG[015]%}↪%?%{$FX[reset]%}%{$FG[001]%}⮀)$(__vi_mode_prompt)$(__vcs_info_prompt)%{$FX[reset]%}%{$FG[014]%}⮂%{$BG[014]%}%{$FG[015]%}%~%{$FX[reset]%}%{$FG[014]%}⮀%{$FX[reset]%} '
+	# distant prompt
+	PS1='%{$BG[002]%}%{$FG[015]%}%{$FX[bold]%}%M%{$FX[reset]%} %(?..%{$BG[001]%}%{$FG[015]%}↪%?%{$FX[reset]%} )$(__vcs_info_prompt)%{$FX[reset]%}%{$BG[014]%}$(__vi_mode_prompt)%{$FG[015]%}%~%{$FX[reset]%} '
 else
-	PS1='%(?..%{$FG[001]%}⮂%{$BG[001]%}%{$FG[015]%}↪%?%{$FX[reset]%}%{$FG[001]%}⮀)$(__vi_mode_prompt)$(__vcs_info_prompt)%{$FX[reset]%}%{$FG[014]%}⮂%{$BG[014]%}%{$FG[015]%}%~%{$FX[reset]%}%{$FG[014]%}⮀%{$FX[reset]%} '
+	# local prompt
+	PS1='%(?..%{$BG[001]%}%{$FG[015]%}↪%?%{$FX[reset]%} )$(__vcs_info_prompt)%{$FX[reset]%}%{$BG[014]%}$(__vi_mode_prompt)%{$FG[015]%}%~%{$FX[reset]%} '
 fi
 # reset prompt on some events
 function zle-keymap-select zle-line-init zle-line-finish {
